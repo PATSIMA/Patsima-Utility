@@ -402,8 +402,9 @@ $PatsimaUtilityForm = New-Object System.Windows.Forms.Form
 $PatsimaUtilityForm.Text = "Patsima Utility"
 $PatsimaUtilityForm.Size = New-Object System.Drawing.Size(700, 400)
 $PatsimaUtilityForm.StartPosition = "CenterScreen"
-$PatsimaUtilityForm.BackColor = "#333333"  # Color de fondo oscuro
-# Descargar el icono desde la URL
+$PatsimaUtilityForm.BackColor = "#141414"  # Color de fondo oscuro
+$PatsimaUtilityForm.FormBorderStyle = "FixedSingle"  # Bloquea el tamaño
+$PatsimaUtilityForm.MaximizeBox = $false  # Deshabilita el botón de maximizar
 $iconUrl = "https://raw.githubusercontent.com/PATSIMA/Patsima-Utility/main/Utility.ico"
 $iconPath = "$env:TEMP\Utility.ico"  # Ruta temporal para guardar el icono descargado
 Invoke-WebRequest -Uri $iconUrl -OutFile $iconPath
@@ -421,7 +422,7 @@ if (Test-Path $iconPath) {
 $panel = New-Object System.Windows.Forms.Panel
 $panel.Location = New-Object System.Drawing.Point(50, 70)
 $panel.Size = New-Object System.Drawing.Size(600, 250)
-$panel.BackColor = "#666666"  # Color de fondo del panel oscuro
+$panel.BackColor = "#1f1f1f"  # Color de fondo del panel oscuro
 
 # Crear cuadro de texto para mostrar acciones
 $textBox = New-Object System.Windows.Forms.TextBox
@@ -439,14 +440,38 @@ $textBox.Padding = New-Object System.Windows.Forms.Padding(5)
 # Agregar cuadro de texto al panel
 $panel.Controls.Add($textBox)
 
+# Función para crear una región redondeada
+function Create-RoundedRegion {
+    param (
+        [System.Drawing.Rectangle]$rect,
+        [int]$radius
+    )
+
+    $path = New-Object System.Drawing.Drawing2D.GraphicsPath
+    $path.AddArc($rect.X, $rect.Y, $radius, $radius, 180, 90)
+    $path.AddArc($rect.Right - $radius, $rect.Y, $radius, $radius, 270, 90)
+    $path.AddArc($rect.Right - $radius, $rect.Bottom - $radius, $radius, $radius, 0, 90)
+    $path.AddArc($rect.X, $rect.Bottom - $radius, $radius, $radius, 90, 90)
+    $path.CloseAllFigures()
+
+    return $path
+}
+
 # Crear botones
 $button1 = New-Object System.Windows.Forms.Button
 $button1.Text = "Desktop"
 $button1.Location = New-Object System.Drawing.Point(50, 25)
-$button1.BackColor = "#666666"  # Color de fondo del botón oscuro
+$button1.BackColor = "#282828"  # Color de fondo del botón oscuro
 $button1.ForeColor = "#ffffff"  # Color del texto del botón blanco
 $button1.FlatStyle = "Flat"  # Botón plano
 $button1.FlatAppearance.BorderSize = 0  # Eliminar el contorno
+$button1.Size = New-Object System.Drawing.Size(100, 30) # Tamaño más grande
+$button1.Add_MouseEnter({
+    $this.BackColor = [System.Drawing.Color]::FromArgb(109, 119, 247)  # Cambiar a gris oscuro al pasar el mouse
+})
+$button1.Add_MouseLeave({
+    $this.BackColor = [System.Drawing.Color]::FromArgb(40, 40, 40)  # Volver al color oscuro original al salir del mouse
+})
 $button1.Add_Click({
     # Ejecutar acciones asociadas al tipo de dispositivo desktop
     Execute-Actions "desktop"
@@ -454,11 +479,18 @@ $button1.Add_Click({
 
 $button2 = New-Object System.Windows.Forms.Button
 $button2.Text = "Laptop"
-$button2.Location = New-Object System.Drawing.Point(150, 25)
-$button2.BackColor = "#666666"  # Color de fondo del botón oscuro
+$button2.Location = New-Object System.Drawing.Point(170, 25)
+$button2.BackColor = "#282828"  # Color de fondo del botón oscuro
 $button2.ForeColor = "#ffffff"  # Color del texto del botón blanco
 $button2.FlatStyle = "Flat"  # Botón plano
 $button2.FlatAppearance.BorderSize = 0  # Eliminar el contorno
+$button2.Size = New-Object System.Drawing.Size(100, 30) # Tamaño más grande
+$button2.Add_MouseEnter({
+    $this.BackColor = [System.Drawing.Color]::FromArgb(109, 119, 247)  # Cambiar a gris oscuro al pasar el mouse
+})
+$button2.Add_MouseLeave({
+    $this.BackColor = [System.Drawing.Color]::FromArgb(40, 40, 40)  # Volver al color oscuro original al salir del mouse
+})
 $button2.Add_Click({
     # Ejecutar acciones asociadas al tipo de dispositivo laptop
     Execute-Actions "laptop"
@@ -466,11 +498,18 @@ $button2.Add_Click({
 
 $button3 = New-Object System.Windows.Forms.Button
 $button3.Text = "Minimal"
-$button3.Location = New-Object System.Drawing.Point(250, 25)
-$button3.BackColor = "#666666"  # Color de fondo del botón oscuro
+$button3.Location = New-Object System.Drawing.Point(290, 25)
+$button3.BackColor = "#282828"  # Color de fondo del botón oscuro
 $button3.ForeColor = "#ffffff"  # Color del texto del botón blanco
 $button3.FlatStyle = "Flat"  # Botón plano
 $button3.FlatAppearance.BorderSize = 0  # Eliminar el contorno
+$button3.Size = New-Object System.Drawing.Size(100, 30) # Tamaño más grande
+$button3.Add_MouseEnter({
+    $this.BackColor = [System.Drawing.Color]::FromArgb(109, 119, 247)  # Cambiar a gris oscuro al pasar el mouse
+})
+$button3.Add_MouseLeave({
+    $this.BackColor = [System.Drawing.Color]::FromArgb(40, 40, 40)  # Volver al color oscuro original al salir del mouse
+})
 $button3.Add_Click({
     # Ejecutar acciones asociadas al tipo de dispositivo minimal
     Execute-Actions "minimal"
@@ -478,11 +517,18 @@ $button3.Add_Click({
 
 $button4 = New-Object System.Windows.Forms.Button
 $button4.Text = "Updates"
-$button4.Location = New-Object System.Drawing.Point(350, 25)
-$button4.BackColor = "#666666"  # Color de fondo del botón oscuro
+$button4.Location = New-Object System.Drawing.Point(410, 25)
+$button4.BackColor = "#282828"  # Color de fondo del botón oscuro
 $button4.ForeColor = "#ffffff"  # Color del texto del botón blanco
 $button4.FlatStyle = "Flat"  # Botón plano
 $button4.FlatAppearance.BorderSize = 0  # Eliminar el contorno
+$button4.Size = New-Object System.Drawing.Size(100, 30) # Tamaño más grande
+$button4.Add_MouseEnter({
+    $this.BackColor = [System.Drawing.Color]::FromArgb(109, 119, 247)  # Cambiar a gris oscuro al pasar el mouse
+})
+$button4.Add_MouseLeave({
+    $this.BackColor = [System.Drawing.Color]::FromArgb(40, 40, 40)  # Volver al color oscuro original al salir del mouse
+})
 $button4.Add_Click({
     Execute-Actions "Updates"
 })
